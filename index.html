@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One-Pager შეთავაზების გენერატორი | GeoLab - The Art of Using AI</title>
+  
+  <!-- Google Fonts: Noto Sans Georgian & Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+Georgian:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Noto Sans Georgian"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#f5f7ff',
+              100: '#ebf0fe',
+              500: '#3b66f5',
+              600: '#2550e6',
+              700: '#1d40c7',
+              900: '#0f172a',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Phosphor Icons for clean minimalist icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased min-h-screen font-sans flex flex-col">
+
+  <!-- Top Navigation Bar -->
+  <header class="no-print bg-white/90 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 px-4 lg:px-8 py-3.5 transition-all">
+    <div class="max-w-[1700px] mx-auto flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Logo & App Title -->
+      <div class="flex items-center gap-3">
+        <div class="h-10 w-10 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center text-white shadow-sm shadow-blue-500/20">
+          <i class="ph-bold ph-file-text text-xl"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <h1 class="font-bold text-slate-900 text-base lg:text-lg leading-tight">Offer Generator</h1>
+            <span class="text-[11px] font-semibold bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full border border-blue-200/60">One Pager</span>
+          </div>
+          <p class="text-xs text-slate-500">GeoLab • The art of using AI</p>
+        </div>
+      </div>
+
+      <!-- Quick Action Controls -->
+      <div class="flex items-center flex-wrap gap-2.5">
+        <button id="btnLoadSample" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-300 rounded-lg shadow-sm transition-colors">
+          <i class="ph ph-sparkle text-amber-500 text-sm"></i>
+          <span>ნიმუშით შევსება</span>
+        </button>
+
+        <button id="btnClear" type="button" class="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-medium text-slate-600 hover:text-rose-600 bg-white hover:bg-rose-50 border border-slate-200 hover:border-rose-200 rounded-lg shadow-sm transition-colors">
+          <i class="ph ph-trash text-sm"></i>
+          <span>გასუფთავება</span>
+        </button>
+
+        <div class="h-5 w-px bg-slate-200 mx-1"></div>
+
+        <button id="btnPrint" type="button" class="inline-flex items-center gap-2 px-4 py-2 text-xs font-semibold text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-800 rounded-lg shadow-sm shadow-blue-600/30 transition-all hover:scale-[1.02] active:scale-[0.99]">
+          <i class="ph-bold ph-printer text-sm"></i>
+          <span>PDF შენახვა / ბეჭდვა</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- Main Workspace (Editor + Live Preview) -->
+  <main class="flex-1 max-w-[1700px] w-full mx-auto p-4 lg:p-6 grid grid-cols-1 xl:grid-cols-12 gap-6 items-start">
+    
+    <!-- LEFT PANEL: Editor & Controls Form (no-print) -->
+    <div class="no-print xl:col-span-5 space-y-5">
+      
+      <!-- Panel 1: Client Information & Logo Upload -->
+      <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+            <i class="ph-bold ph-buildings text-blue-600 text-base"></i>
+            <h3>კლიენტის ინფორმაცია</h3>
+          </div>
+          <span class="text-xs text-slate-400 font-medium">სავალდებულო</span>
+        </div>
+
+        <div class="space-y-3.5">
+          <!-- Client Organization Name -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" for="clientName">
+              კლიენტი ორგანიზაციის სახელი *
+            </label>
+            <input type="text" id="clientName" placeholder="მაგ: შპს ინოვაციური ბიზნეს ჯგუფი" 
+              class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+          </div>
+
+          <!-- Feature 1: Client Organization Logo Upload -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1">
+              კლიენტის ლოგოს ატვირთვა
+            </label>
+            <div id="logoDropZone" class="relative group border-2 border-dashed border-slate-200 hover:border-blue-400 bg-slate-50/60 hover:bg-blue-50/30 rounded-xl p-3 text-center transition-all cursor-pointer">
+              <input type="file" id="clientLogoInput" accept="image/png,image/jpeg,image/jpg,image/svg+xml,image/webp" class="hidden">
+              
+              <!-- State A: Placeholder when no logo uploaded -->
+              <div id="logoUploadPlaceholder" class="flex items-center justify-center gap-3 text-xs text-slate-500 py-1">
+                <div class="h-9 w-9 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-400 group-hover:text-blue-500 group-hover:border-blue-300 transition-colors shadow-xs">
+                  <i class="ph-bold ph-cloud-arrow-up text-lg"></i>
+                </div>
+                <div class="text-left">
+                  <span class="font-semibold text-slate-700 group-hover:text-blue-600 transition-colors block">
+                    ატვირთეთ ან ჩააგდეთ ლოგო
+                  </span>
+                  <span class="text-[10px] text-slate-400 block">PNG, JPG, SVG, WebP (გამოჩნდება One-Pager-ზე)</span>
+                </div>
+              </div>
+
+              <!-- State B: Active thumbnail & remove button -->
+              <div id="logoPreviewContainer" class="hidden flex items-center justify-between gap-3">
+                <div class="flex items-center gap-2.5 min-w-0">
+                  <div class="h-10 w-12 rounded-lg bg-white border border-slate-200 p-1 flex items-center justify-center overflow-hidden shrink-0 shadow-xs">
+                    <img id="clientLogoThumb" src="" alt="Client Logo Thumbnail" class="max-h-full max-w-full object-contain">
+                  </div>
+                  <div class="text-left truncate">
+                    <p id="clientLogoFileName" class="text-xs font-semibold text-slate-800 truncate">logo.png</p>
+                    <span class="text-[10px] text-emerald-600 font-medium flex items-center gap-1">
+                      <i class="ph-fill ph-check-circle"></i> ატვირთულია
+                    </span>
+                  </div>
+                </div>
+                <button type="button" id="btnRemoveClientLogo" class="shrink-0 inline-flex items-center gap-1 text-[11px] font-semibold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-2.5 py-1.5 rounded-lg transition-colors" title="ლოგოს წაშლა">
+                  <i class="ph-bold ph-trash"></i>
+                  <span>წაშლა</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Offer Summary / Objective -->
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" for="offerSummary">
+              შეთავაზების მოკლე აღწერა / მიზანი *
+            </label>
+            <textarea id="offerSummary" rows="2" placeholder="მაგ: ხელოვნური ინტელექტის ინსტრუმენტების დანერგვისა და გუნდის გადამზადების კორპორატიული პროგრამა..." 
+              class="w-full text-sm px-3.5 py-2.5 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"></textarea>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1" for="offerDate">
+                შეთავაზების თარიღი
+              </label>
+              <input type="date" id="offerDate" 
+                class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1" for="validUntil">
+                მოქმედების ვადა
+              </label>
+              <input type="date" id="validUntil" 
+                class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1" for="contactPerson">
+                საკონტაქტო პირი (კლიენტი)
+              </label>
+              <input type="text" id="contactPerson" placeholder="მაგ: ნინო ბერიძე" 
+                class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-700 mb-1" for="offerNumber">
+                შეთავაზების N
+              </label>
+              <input type="text" id="offerNumber" placeholder="GEO-AI-2026-01" 
+                class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Feature 2: Offer Background Color Palette Selector Section -->
+      <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 space-y-3">
+        <div class="flex items-center justify-between pb-2.5 border-b border-slate-100">
+          <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+            <i class="ph-bold ph-palette text-blue-600 text-base"></i>
+            <h3>შეთავაზების ფონის ფერი</h3>
+          </div>
+          <span id="activeColorName" class="text-xs font-semibold text-slate-500">Pure White</span>
+        </div>
+
+        <p class="text-xs text-slate-500">აირჩიეთ დახვეწილი ღია ტონალობა One-Pager დოკუმენტის ფონისთვის:</p>
+
+        <!-- Color Swatches Grid -->
+        <div class="flex items-center flex-wrap gap-3 pt-1">
+          <!-- 1. Pure White (#FFFFFF) - Default -->
+          <button type="button" class="color-swatch-btn relative h-9 w-9 rounded-full border border-slate-300 shadow-xs flex items-center justify-center transition-all hover:scale-110 active:scale-95" 
+            data-color="#FFFFFF" data-name="Pure White" style="background-color: #FFFFFF;" title="Pure White (#FFFFFF)">
+            <i class="ph-bold ph-check text-slate-800 text-xs"></i>
+          </button>
+
+          <!-- 2. Warm Ivory / Cream (#FAF8F5) -->
+          <button type="button" class="color-swatch-btn relative h-9 w-9 rounded-full border border-amber-200/90 shadow-xs flex items-center justify-center transition-all hover:scale-110 active:scale-95" 
+            data-color="#FAF8F5" data-name="Warm Ivory" style="background-color: #FAF8F5;" title="Warm Ivory / Cream (#FAF8F5)">
+            <i class="ph-bold ph-check text-slate-800 text-xs hidden"></i>
+          </button>
+
+          <!-- 3. Soft Cool Slate (#F4F7FA) -->
+          <button type="button" class="color-swatch-btn relative h-9 w-9 rounded-full border border-slate-300 shadow-xs flex items-center justify-center transition-all hover:scale-110 active:scale-95" 
+            data-color="#F4F7FA" data-name="Cool Slate" style="background-color: #F4F7FA;" title="Soft Cool Slate (#F4F7FA)">
+            <i class="ph-bold ph-check text-slate-800 text-xs hidden"></i>
+          </button>
+
+          <!-- 4. Pale Mint / Sage (#F3F8F6) -->
+          <button type="button" class="color-swatch-btn relative h-9 w-9 rounded-full border border-emerald-200/90 shadow-xs flex items-center justify-center transition-all hover:scale-110 active:scale-95" 
+            data-color="#F3F8F6" data-name="Pale Mint" style="background-color: #F3F8F6;" title="Pale Mint / Sage (#F3F8F6)">
+            <i class="ph-bold ph-check text-emerald-900 text-xs hidden"></i>
+          </button>
+
+          <!-- 5. Soft Lavender Tint (#F6F5FA) -->
+          <button type="button" class="color-swatch-btn relative h-9 w-9 rounded-full border border-purple-200/90 shadow-xs flex items-center justify-center transition-all hover:scale-110 active:scale-95" 
+            data-color="#F6F5FA" data-name="Soft Lavender" style="background-color: #F6F5FA;" title="Soft Lavender Tint (#F6F5FA)">
+            <i class="ph-bold ph-check text-purple-900 text-xs hidden"></i>
+          </button>
+
+          <div class="h-6 w-px bg-slate-200 mx-1"></div>
+
+          <!-- Subtle Custom Color Picker -->
+          <label class="relative h-9 px-3 rounded-full border border-slate-200 hover:border-slate-300 bg-slate-50 hover:bg-slate-100 flex items-center gap-1.5 cursor-pointer text-xs text-slate-600 transition-all shadow-xs" title="სხვა ფერის არჩევა">
+            <i class="ph-bold ph-eyedropper text-slate-500"></i>
+            <span class="text-[11px] font-medium">სხვა ფერი</span>
+            <input type="color" id="customBgColor" value="#FFFFFF" class="opacity-0 absolute inset-0 w-full h-full cursor-pointer">
+          </label>
+        </div>
+      </section>
+
+      <!-- Panel 2: Products & Services (Dynamic Table) -->
+      <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+            <i class="ph-bold ph-shopping-bag text-blue-600 text-base"></i>
+            <h3>პროდუქტები და მომსახურება</h3>
+          </div>
+          <button id="btnAddItem" type="button" class="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100/80 px-2.5 py-1.5 rounded-lg transition-colors">
+            <i class="ph-bold ph-plus"></i>
+            <span>დამატება</span>
+          </button>
+        </div>
+
+        <div id="itemsContainer" class="space-y-3">
+          <!-- Item rows will be rendered dynamically by app.js -->
+        </div>
+
+        <button id="btnAddItemBottom" type="button" class="w-full py-2.5 border-2 border-dashed border-slate-200 hover:border-blue-400 rounded-xl text-xs font-medium text-slate-500 hover:text-blue-600 transition-all flex items-center justify-center gap-2">
+          <i class="ph-bold ph-plus-circle text-base"></i>
+          <span>ახალი პუნქტის დამატება</span>
+        </button>
+      </section>
+
+      <!-- Panel 3: Financial & Terms Settings -->
+      <section class="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-5 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-slate-100">
+          <div class="flex items-center gap-2 text-slate-900 font-bold text-sm">
+            <i class="ph-bold ph-receipt text-blue-600 text-base"></i>
+            <h3>ფინანსები & პირობები</h3>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" for="currencySelect">
+              ვალუტა
+            </label>
+            <select id="currencySelect" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium">
+              <option value="₾" selected>₾ ლარი (GEL)</option>
+              <option value="$">$ აშშ დოლარი (USD)</option>
+              <option value="€">€ ევრო (EUR)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" for="vatType">
+              დღგ (18%)
+            </label>
+            <select id="vatType" class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium">
+              <option value="none">არ ემატება (0%)</option>
+              <option value="exclusive" selected>+ 18% დღგ</option>
+              <option value="inclusive">შედის ფასში</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" for="discountPercent">
+              ფასდაკლება (%)
+            </label>
+            <input type="number" id="discountPercent" min="0" max="100" value="0" placeholder="0" 
+              class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 font-medium">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold text-slate-700 mb-1" for="additionalTerms">
+            გადახდის პირობები და შენიშვნა
+          </label>
+          <textarea id="additionalTerms" rows="2" placeholder="მაგ: ანგარიშსწორება ხორციელდება 2 ეტაპად (50% ავანსი, 50% დასრულებისას)..." 
+            class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all resize-none"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" for="authorName">
+              შემდგენელი (GeoLab)
+            </label>
+            <input type="text" id="authorName" value="GeoLab / The Art of Using AI Team" 
+              class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-700 mb-1" for="contactEmail">
+              საკონტაქტო ელ-ფოსტა
+            </label>
+            <input type="text" id="contactEmail" value="info@geolab.edu.ge" 
+              class="w-full text-xs px-3 py-2 rounded-xl border border-slate-200 bg-slate-50/50 focus:bg-white focus:outline-none">
+          </div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- RIGHT PANEL: Live A4 Document Preview -->
+    <div class="xl:col-span-7 flex flex-col items-center justify-start sticky top-20">
+      
+      <!-- Preview Header Helper -->
+      <div class="no-print w-full flex items-center justify-between pb-3 text-xs text-slate-500 px-1">
+        <span class="inline-flex items-center gap-1.5 font-medium">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+          </span>
+          Live A4 One-Pager Preview
+        </span>
+        <span class="text-slate-400">რეალური ზომა: A4 (210 × 297 მმ)</span>
+      </div>
+
+      <!-- The A4 Sheet Paper Container -->
+      <div id="printArea" class="a4-sheet bg-white text-slate-800 shadow-xl border border-slate-200/90 rounded-sm relative flex flex-col justify-between overflow-hidden">
+        
+        <!-- Document Content -->
+        <div class="p-8 sm:p-10 space-y-6">
+
+          <!-- Header: Brand Logo & Offer Document Metadata -->
+          <div class="flex items-start justify-between border-b border-slate-200/80 pb-5 gap-4">
+            <div class="space-y-2">
+              <div class="flex items-center gap-3">
+                <img src="logo.png" alt="The Art of Using AI Logo" class="h-12 w-auto object-contain max-w-[200px]" onerror="this.style.display='none'; document.getElementById('logoFallback').style.display='block';">
+                <div id="logoFallback" class="hidden font-extrabold text-xl tracking-tight text-slate-900">
+                  GeoLab <span class="text-blue-600 font-medium">| The art of using AI</span>
+                </div>
+              </div>
+              <p class="text-[11px] font-medium text-slate-500 tracking-wide uppercase">
+                საგანმანათლებლო & კორპორატიული AI გადაწყვეტილებები
+              </p>
+            </div>
+
+            <div class="text-right shrink-0">
+              <h2 class="text-lg sm:text-xl font-extrabold tracking-tight text-slate-900 uppercase">
+                კომერციული შეთავაზება
+              </h2>
+              <div class="mt-1 text-[11px] text-slate-500 space-y-0.5">
+                <p>N: <span id="pvOfferNumber" class="font-semibold text-slate-800">GEO-AI-2026-01</span></p>
+                <p>თარიღი: <span id="pvOfferDate" class="font-semibold text-slate-800">-</span></p>
+                <p>ვადა: <span id="pvValidUntil" class="font-semibold text-slate-800">-</span></p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Highlight: Program Intro Box -->
+          <div class="bg-gradient-to-r from-blue-50/80 to-slate-50/70 border-l-4 border-blue-600 p-3.5 rounded-r-xl shadow-xs">
+            <div class="flex items-start gap-2.5">
+              <i class="ph-fill ph-sparkle text-blue-600 text-base mt-0.5 shrink-0"></i>
+              <div class="space-y-0.5">
+                <p class="text-xs font-bold text-slate-900">პროგრამის შესახებ: „The art of using AI“</p>
+                <p class="text-[11px] leading-relaxed text-slate-600">
+                  ეს არის შერჩეული საგანმანათლებლო პროგრამა ადამიანის შემოქმედებისა და ხელოვნური ინტელექტის გზაჯვარედინზე, შექმნილი ცნობისმოყვარე ადამიანებისთვის, რომლებიც მზად არიან მომავლის შესაქმნელად.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Client & Project Scope Information (With Uploaded Client Logo Display) -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-white/70 p-4 rounded-xl border border-slate-200/80 shadow-xs backdrop-blur-xs">
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-0.5">
+                <span class="text-[10px] font-bold tracking-wider text-slate-400 uppercase block mb-1">
+                  შეთავაზება მომზადებულია ორგანიზაციისთვის:
+                </span>
+                <h3 id="pvClientName" class="text-sm font-bold text-slate-900 leading-snug">
+                  (მიუთითეთ ორგანიზაციის სახელი)
+                </h3>
+                <p id="pvContactPerson" class="text-xs text-slate-500 mt-0.5"></p>
+              </div>
+
+              <!-- Uploaded Client Logo Container in Preview -->
+              <div id="pvClientLogoWrapper" class="hidden shrink-0 p-1.5 bg-white rounded-lg border border-slate-200/90 shadow-xs flex items-center justify-center">
+                <img id="pvClientLogo" src="" alt="Client Logo" class="max-h-12 max-w-[120px] w-auto object-contain">
+              </div>
+            </div>
+
+            <div>
+              <span class="text-[10px] font-bold tracking-wider text-slate-400 uppercase block mb-1">
+                პროექტის მიზანი და შინაარსი:
+              </span>
+              <p id="pvOfferSummary" class="text-xs text-slate-700 leading-relaxed">
+                (მიუთითეთ შეთავაზების მოკლე აღწერა)
+              </p>
+            </div>
+          </div>
+
+          <!-- Dynamic Products / Services Table -->
+          <div class="space-y-2">
+            <h4 class="text-xs font-bold uppercase tracking-wider text-slate-600">
+              შეთავაზებული სერვისები და ღირებულება
+            </h4>
+            
+            <table class="w-full text-left border-collapse bg-white/60 rounded-lg overflow-hidden">
+              <thead>
+                <tr class="border-b-2 border-slate-800 text-[11px] uppercase tracking-wider text-slate-700 bg-slate-50/50">
+                  <th class="py-2.5 px-1 w-8 text-center font-bold">#</th>
+                  <th class="py-2.5 px-2 font-bold">მომსახურება / პროდუქტი</th>
+                  <th class="py-2.5 px-2 text-center w-16 font-bold">რაოდ.</th>
+                  <th class="py-2.5 px-2 text-right w-24 font-bold">ერთ. ფასი</th>
+                  <th class="py-2.5 px-2 text-right w-28 font-bold">ჯამი</th>
+                </tr>
+              </thead>
+              <tbody id="pvItemsTableBody" class="divide-y divide-slate-200/80 text-xs text-slate-800">
+                <!-- Dynamically populated -->
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Totals Summary & Calculations -->
+          <div class="flex justify-end pt-1">
+            <div class="w-64 space-y-1.5 text-xs bg-white/60 p-3 rounded-xl border border-slate-200/60 shadow-xs">
+              <div class="flex justify-between text-slate-600 py-0.5">
+                <span>ქვედა ჯამი:</span>
+                <span id="pvSubtotal" class="font-semibold text-slate-800">0.00 ₾</span>
+              </div>
+              <div id="pvDiscountRow" class="flex justify-between text-emerald-600 py-0.5 hidden">
+                <span>ფასდაკლება (<span id="pvDiscountRate">0</span>%):</span>
+                <span id="pvDiscountAmount" class="font-semibold">-0.00 ₾</span>
+              </div>
+              <div id="pvVatRow" class="flex justify-between text-slate-600 py-0.5">
+                <span>დღგ (18%):</span>
+                <span id="pvVatAmount" class="font-semibold text-slate-800">0.00 ₾</span>
+              </div>
+              <div class="border-t-2 border-slate-800 pt-2 flex justify-between items-baseline">
+                <span class="text-sm font-bold text-slate-900">სულ ჯამი:</span>
+                <span id="pvGrandTotal" class="text-base font-extrabold text-blue-700">0.00 ₾</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Terms & Conditions Note -->
+          <div id="pvTermsBox" class="bg-white/70 p-3 rounded-lg border border-slate-200/80 text-[11px] text-slate-600 space-y-1">
+            <span class="font-bold text-slate-800 block text-xs">პირობები და ანგარიშსწორება:</span>
+            <p id="pvTermsText" class="leading-relaxed">
+              ანგარიშსწორება ხორციელდება უნაღდო ანგარიშსწორების ფორმით, მიღება-ჩაბარების აქტის გაფორმების საფუძველზე.
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Document Footer / Signatures Area -->
+        <div class="p-8 sm:p-10 pt-0 mt-auto">
+          <div class="grid grid-cols-2 gap-12 border-t border-slate-200/80 pt-6">
+            <div class="space-y-8">
+              <div>
+                <p class="text-[10px] uppercase font-bold text-slate-400">შემთავაზებელი:</p>
+                <p id="pvAuthorName" class="text-xs font-semibold text-slate-800 mt-0.5">GeoLab / The Art of Using AI</p>
+                <p id="pvContactEmail" class="text-[11px] text-slate-500">info@geolab.edu.ge</p>
+              </div>
+              <div class="border-b border-dashed border-slate-300 w-44"></div>
+              <p class="text-[10px] text-slate-400 -mt-6">ხელმოწერა / ბეჭედი</p>
+            </div>
+
+            <div class="space-y-8">
+              <div>
+                <p class="text-[10px] uppercase font-bold text-slate-400">მიმღები ორგანიზაცია:</p>
+                <p id="pvClientSignName" class="text-xs font-semibold text-slate-800 mt-0.5">-</p>
+                <p id="pvContactPersonSign" class="text-[11px] text-slate-500">-</p>
+              </div>
+              <div class="border-b border-dashed border-slate-300 w-44"></div>
+              <p class="text-[10px] text-slate-400 -mt-6">უფლებამოსილი პირის ხელმოწერა</p>
+            </div>
+          </div>
+
+          <!-- Bottom Micro Footer -->
+          <div class="mt-6 pt-3 border-t border-slate-200/60 flex items-center justify-between text-[10px] text-slate-400">
+            <span>GeoLab • ილიას სახელმწიფო უნივერსიტეტის ტექნოლოგიური ლაბორატორია</span>
+            <span>www.geolab.edu.ge</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- JavaScript -->
+  <script src="app.js"></script>
+</body>
+</html>

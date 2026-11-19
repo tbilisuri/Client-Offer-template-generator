@@ -1,0 +1,147 @@
+/* ==========================================================================
+   One-Pager Commercial Offer Generator - Custom Styles
+   GeoLab • The art of using AI
+   ========================================================================== */
+
+/* Smooth font rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* --------------------------------------------------------------------------
+   A4 Sheet Preview Container (Screen Mode)
+   -------------------------------------------------------------------------- */
+.a4-sheet {
+  width: 100%;
+  max-width: 210mm;
+  min-height: 297mm;
+  transition: background-color 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+}
+
+@media (min-width: 1280px) {
+  .a4-sheet {
+    width: 210mm;
+    min-height: 297mm;
+  }
+}
+
+/* Color Swatches Active Indicator */
+.color-swatch-btn.active {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px #2563eb !important;
+  transform: scale(1.1);
+}
+
+.color-swatch-btn.active i {
+  display: block !important;
+}
+
+/* Dropzone dragover effect */
+#logoDropZone.dragover {
+  border-color: #2563eb !important;
+  background-color: #eff6ff !important;
+}
+
+/* Item Card Animation */
+.item-row-card {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   PRINT OPTIMIZATION (@media print)
+   Guarantees a clean, razor-sharp single page A4 PDF output with preserved background
+   -------------------------------------------------------------------------- */
+@page {
+  size: A4 portrait;
+  margin: 10mm 12mm 10mm 12mm;
+}
+
+@media print {
+  /* Hide all UI elements, navigation, and editing sidebars */
+  .no-print,
+  header,
+  aside,
+  nav,
+  button,
+  input,
+  select,
+  textarea {
+    display: none !important;
+  }
+
+  /* Reset outer html and body background to avoid paper edge bleeding */
+  html, body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    min-height: 100% !important;
+  }
+
+  main {
+    display: block !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .sticky {
+    position: static !important;
+  }
+
+  /* Target the A4 Sheet - Preserve User's Selected Background Palette */
+  .a4-sheet {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    page-break-after: avoid !important;
+    page-break-inside: avoid !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Ensure colors and background gradients render accurately in print/PDF */
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Prevent page breaks inside critical sections */
+  table, tr, td, th, .signature-block {
+    page-break-inside: avoid !important;
+  }
+}
